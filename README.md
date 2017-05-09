@@ -1,7 +1,6 @@
 # Follow: CouchDB changes and db updates notifier for NodeJS
 
-[![build
-status](https://secure.travis-ci.org/iriscouch/follow.png)](http://travis-ci.org/iriscouch/follow)
+[![Build Status](https://travis-ci.org/cloudant-labs/follow.svg?branch=master)](https://travis-ci.org/cloudant-labs/follow)
 
 Follow (upper-case *F*) comes from an internal Iris Couch project used in production for over a year. It works in the browser (beta) and is available as an NPM module.
 
