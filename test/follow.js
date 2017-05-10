@@ -245,26 +245,3 @@ test('Handle a deleted database', function(t) {
     }
   })
 })
-
-test('Follow _db_updates', function (t) {
-  t.plan(4);
-  var count = 0;
-  var types = ['created'];
-  var db_name = couch.DB.split('/').slice(-1)[0];
-  var feed = new follow.Feed({db: couch.DB_UPDATES});
-  feed.on('error', function (error) {
-    t.false(error, 'Error in feed ' + error);
-  });
-
-  feed.on('change', function (change) {
-    t.ok(change, 'Received a change ' + JSON.stringify(change));
-    t.equal(change.type, types[count], 'Change should be of type "' + types[count] + '"');
-    t.equal(change.db_name, db_name + 1, 'Change should have db_name with the name of the db where the change occoured.');
-    feed.stop();
-  });
-
-  feed.start();
-  couch.create_and_delete_db(t, function () {
-    t.ok(true, 'things happened');
-  });
-});
