@@ -19,7 +19,7 @@ module.exports = { 'DB': DB
                  , 'redo': redo_couch
                  , 'setup': setup_test
                  , 'make_data': make_data
-                 , 'create_and_delete_db': create_and_delete_db
+                 , 'delete_db': delete_db
                  }
 
 
@@ -88,17 +88,13 @@ function init_db(t, callback) {
   })
 }
 
-function create_and_delete_db(t, callback) {
-  request.put({ uri: DB + 1, json: true}, function (er, res) {
-    t.false(er, 'create test db');
-    request.del({uri: DB +1, json: true}, function (er, res) {
-      t.false(er, 'Clear old test DB: ' + DB)
-      t.ok(!res.body.error);
-      callback();
-    });
-  });
+function delete_db(t, callback) {
+  request.del({uri: DB, json: true}, function (er, res) {
+    t.false(er, 'Clear old test DB: ' + DB)
+    t.ok(!res.body.error)
+    callback()
+    })
 }
-
 
 function make_data(minimum_size, callback) {
   var payload = {'docs':[]}

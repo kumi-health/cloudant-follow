@@ -52,7 +52,7 @@ test('Issue #6', function(t) {
       saw.seqs[change.seq] = true
       t.notOk(change.last_seq, 'Change '+change.seq+' ha no .last_seq')
       if(change.seq == 1) {
-        couch.redo(function(er) {
+        couch.delete_db(t, function(er) {
           saw.redid = true
           saw.redo_err = er
         })
