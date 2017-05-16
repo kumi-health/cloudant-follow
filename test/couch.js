@@ -1,6 +1,20 @@
 // CouchDB tests
 //
 // This module is also a library for other test modules.
+//
+// Copyright © 2017 IBM Corp. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
 
 var tap = require('tap')
   , util = require('util')
@@ -19,7 +33,7 @@ module.exports = { 'DB': DB
                  , 'redo': redo_couch
                  , 'setup': setup_test
                  , 'make_data': make_data
-                 , 'create_and_delete_db': create_and_delete_db
+                 , 'delete_db': delete_db
                  }
 
 
@@ -88,17 +102,13 @@ function init_db(t, callback) {
   })
 }
 
-function create_and_delete_db(t, callback) {
-  request.put({ uri: DB + 1, json: true}, function (er, res) {
-    t.false(er, 'create test db');
-    request.del({uri: DB +1, json: true}, function (er, res) {
-      t.false(er, 'Clear old test DB: ' + DB)
-      t.ok(!res.body.error);
-      callback();
-    });
-  });
+function delete_db(t, callback) {
+  request.del({uri: DB, json: true}, function (er, res) {
+    t.false(er, 'Clear old test DB: ' + DB)
+    t.ok(!res.body.error)
+    callback()
+    })
 }
-
 
 function make_data(minimum_size, callback) {
   var payload = {'docs':[]}
