@@ -2,9 +2,17 @@
 
 [![Build Status](https://travis-ci.org/cloudant-labs/follow.svg?branch=master)](https://travis-ci.org/cloudant-labs/follow)
 
-Follow (upper-case *F*) comes from an internal Iris Couch project used in production for over a year. It works in the browser (beta) and is available as an NPM module.
+---
 
-    $ npm install follow
+This is a fork of the Iris Couch [follow](https://github.com/iriscouch/follow) project.
+
+This fork is maintained by IBM Cloudant in order to provided fixes for the [nodejs-cloudant](https://github.com/cloudant/nodejs-cloudant) library.
+
+---
+
+Follow (upper-case F) comes from an internal Iris Couch project used in production for over a year. It works in the browser (beta) and is available as an NPM module.
+
+    $ npm install cloudant-follow
 
 ## Example
 
