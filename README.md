@@ -10,16 +10,12 @@ This fork is maintained by IBM Cloudant in order to provided fixes for the [node
 
 ---
 
-Follow (upper-case F) comes from an internal Iris Couch project used in production for over a year. It works in the browser (beta) and is available as an NPM module.
-
-    $ npm install cloudant-follow
-
 ## Example
 
 This looks much like the [request][req] API.
 
 ```javascript
-var follow = require('follow');
+var follow = require('cloudant-follow');
 follow("https://example.iriscouch.com/boogie", function(error, change) {
   if(!error) {
     console.log("Got change number " + change.seq + ": " + change.id);
@@ -102,7 +98,7 @@ Besides the CouchDB options, more are available:
 The main API is a thin wrapper around the EventEmitter API.
 
 ```javascript
-var follow = require('follow');
+var follow = require('cloudant-follow');
 
 var opts = {}; // Same options paramters as before
 var feed = new follow.Feed(opts);
