@@ -6,7 +6,7 @@
 
 This is a fork of the Iris Couch [follow](https://github.com/iriscouch/follow) project.
 
-This fork is maintained by IBM Cloudant in order to provided fixes for the [nodejs-cloudant](https://github.com/cloudant/nodejs-cloudant) library.
+This fork is maintained by IBM Cloudant in order to provide fixes for the [nodejs-cloudant](https://github.com/cloudant/nodejs-cloudant) library.
 
 ---
 
