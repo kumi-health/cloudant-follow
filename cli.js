@@ -17,9 +17,7 @@
 
 // The follow command-line interface.
 
-var lib = require('./lib'),
-  couch_changes = require('./api')
-;
+var couch_changes = require('./api');
 
 function puts(str) {
   process.stdout.write(str + '\n');
@@ -90,4 +88,4 @@ function main() {
 }
 
 exports.main = main;
-if (!require.isBrowser && process.argv[1] == module.filename) { main(); }
+if (!require.isBrowser && process.argv[1] === module.filename) { main(); }

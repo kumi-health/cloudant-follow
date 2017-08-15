@@ -16,8 +16,8 @@
 
 // The changes_couchdb API
 
-var feed = require('./lib/feed'),
-  stream = require('./lib/stream');
+var feed = require('./lib/feed');
+var stream = require('./lib/stream');
 
 function follow_feed(opts, cb) {
   var ch_feed = new feed.Feed(opts);
