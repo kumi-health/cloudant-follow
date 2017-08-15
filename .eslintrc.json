@@ -9,6 +9,7 @@
     "header"
   ],
   "rules": {
+    "camelcase": 0,
     "space-before-function-paren": ["error", "never"],
     "handle-callback-err": "off",
     "strict": ["error", "global"],
