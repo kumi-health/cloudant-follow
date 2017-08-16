@@ -1,6 +1,6 @@
 # Follow: CouchDB changes and db updates notifier for NodeJS
-
 [![Build Status](https://travis-ci.org/cloudant-labs/cloudant-follow.svg?branch=master)](https://travis-ci.org/cloudant-labs/cloudant-follow)
+[![Greenkeeper badge](https://badges.greenkeeper.io/cloudant-labs/cloudant-follow.svg)](https://greenkeeper.io/)
 
 ---
 
