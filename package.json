@@ -23,6 +23,15 @@
     "url": "git@github.com:cloudant-labs/cloudant-follow.git"
   },
   "dependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-semistandard": "^11.0.0",
+    "eslint-plugin-header": "^1.0.0",
     "request": "~2.81.0",
     "browser-request": "~0.3.0",
     "debug": "^2.1.0"
@@ -35,7 +44,7 @@
   },
   "main": "./api.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "eslint --ignore-path .eslintignore . && tap test/*.js"
   },
   "bin": {
     "follow": "./cli.js"
