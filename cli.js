@@ -34,10 +34,18 @@ function main() {
   feed.heartbeat = (process.env.heartbeat || '3000').replace(/s$/, '000');
   feed.heartbeat = parseInt(feed.heartbeat);
 
-  if (require.isBrowser) { feed.feed = 'longpoll'; }
-  if (process.env.host) { feed.headers.host = process.env.host; }
-  if (process.env.inactivity) { feed.inactivity_ms = parseInt(process.env.inactivity); }
-  if (process.env.limit) { feed.limit = parseInt(process.env.limit); }
+  if (require.isBrowser) {
+    feed.feed = 'longpoll';
+  }
+  if (process.env.host) {
+    feed.headers.host = process.env.host;
+  }
+  if (process.env.inactivity) {
+    feed.inactivity_ms = parseInt(process.env.inactivity);
+  }
+  if (process.env.limit) {
+    feed.limit = parseInt(process.env.limit);
+  }
 
   feed.query_params.pid = process.pid;
   feed.filter = process.env.filter || example_filter;
@@ -45,8 +53,12 @@ function main() {
     // This is a local filter. It runs on the client side.
     var label = 'Filter ' + (req.query.pid || '::');
 
-    if (process.env.show_doc) { console.log(label + ' doc: ' + JSON.stringify(doc)); }
-    if (process.env.show_req) { console.log(label + ' for ' + doc._id + ' req: ' + JSON.stringify(req)); }
+    if (process.env.show_doc) {
+      console.log(label + ' doc: ' + JSON.stringify(doc));
+    }
+    if (process.env.show_req) {
+      console.log(label + ' for ' + doc._id + ' req: ' + JSON.stringify(req));
+    }
     return true;
   }
 
@@ -65,7 +77,11 @@ function main() {
   });
 
   feed.on('retry', function(state) {
-    if (require.isBrowser) { puts('Long polling since ' + state.since); } else { puts('Retry since ' + state.since + ' after ' + state.after + 'ms'); }
+    if (require.isBrowser) {
+      puts('Long polling since ' + state.since);
+    } else {
+      puts('Retry since ' + state.since + ' after ' + state.after + 'ms');
+    }
   });
 
   feed.on('response', function() {
@@ -75,17 +91,23 @@ function main() {
   feed.on('error', function(er) {
     // console.error(er);
     console.error('Changes error ============\n' + er.stack);
-    setTimeout(function() { process.exit(0); }, 100);
+    setTimeout(function() {
+      process.exit(0);
+    }, 100);
   });
 
   process.on('uncaughtException', function(er) {
     puts('========= UNCAUGHT EXCEPTION; This is bad');
     puts(er.stack);
-    setTimeout(function() { process.exit(1); }, 100);
+    setTimeout(function() {
+      process.exit(1);
+    }, 100);
   });
 
   feed.follow();
 }
 
 exports.main = main;
-if (!require.isBrowser && process.argv[1] === module.filename) { main(); }
+if (!require.isBrowser && process.argv[1] === module.filename) {
+  main();
+}

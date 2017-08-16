@@ -21,8 +21,12 @@ var stream = require('./lib/stream');
 
 function follow_feed(opts, cb) {
   var ch_feed = new feed.Feed(opts);
-  ch_feed.on('error', function(er) { return cb && cb.call(ch_feed, er); });
-  ch_feed.on('change', function(ch) { return cb && cb.call(ch_feed, null, ch); });
+  ch_feed.on('error', function(er) {
+    return cb && cb.call(ch_feed, er);
+  });
+  ch_feed.on('change', function(ch) {
+    return cb && cb.call(ch_feed, null, ch);
+  });
 
   // Give the caller a chance to hook into any events.
   process.nextTick(function() {
