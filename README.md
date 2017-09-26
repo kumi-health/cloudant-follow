@@ -83,6 +83,7 @@ All of the CouchDB _changes options are allowed. See http://guide.couchdb.org/dr
 * `filter` |
   * **Either** a path to design document filter, e.g. `app/important`
   * **Or** a Javascript `function(doc, req) { ... }` which should return true or false
+* `view`  | a path to design document view, e.g. `app/myView`
 * `query_params` | **Optional** for use in with `filter` functions, passed as `req.query` to the filter function
 
 Besides the CouchDB options, more are available:
