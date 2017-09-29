@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/cloudant-labs/cloudant-follow.svg?branch=master)](https://travis-ci.org/cloudant-labs/cloudant-follow)
 [![Greenkeeper badge](https://badges.greenkeeper.io/cloudant-labs/cloudant-follow.svg)](https://greenkeeper.io/)
 
+[![NPM](https://nodei.co/npm/cloudant-follow.png?compact=true)](https://nodei.co/npm/cloudant-follow/)
+
 ---
 
 This is a fork of the Iris Couch [follow](https://github.com/iriscouch/follow) project.
