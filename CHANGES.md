@@ -1,4 +1,5 @@
 # UNRELEASED
+- [FIXED] Update list of possible feed query parameters.
 
 # 0.14.0 (2017-09-29)
 - [NEW] Correctly construct feed URL for `feed.view`.
