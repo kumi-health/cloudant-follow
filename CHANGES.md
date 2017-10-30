@@ -1,4 +1,5 @@
 # UNRELEASED
+- [FIXED] Check `request` is defined before using in feed timeout handler.
 - [FIXED] Update list of possible feed query parameters.
 
 # 0.14.0 (2017-09-29)
