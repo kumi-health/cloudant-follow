@@ -1,3 +1,6 @@
+# UNRELEASED
+- [UPGRADED] Use latest version of request@2.x.x.
+
 # 0.15.0 (2017-10-30)
 - [FIXED] Check `request` is defined before using in feed timeout handler.
 - [FIXED] Update list of possible feed query parameters.
