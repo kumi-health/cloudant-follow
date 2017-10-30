@@ -48,5 +48,8 @@
   },
   "bin": {
     "follow": "./cli.js"
+  },
+  "engines": {
+    "node": ">=4.8.2"
   }
 }
