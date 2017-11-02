@@ -1,4 +1,4 @@
-# UNRELEASED
+# 0.16.1 (2017-11-02)
 - [FIXED] Corrected `eslint` to be `devDependencies` instead of `dependencies`.
 
 # 0.16.0 (2017-10-31)
