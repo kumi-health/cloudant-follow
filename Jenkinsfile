@@ -32,7 +32,7 @@ def setupNodeAndTest(version) {
             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             nvm install ${version}
             nvm use ${version}
-            npm test
+            npm test && npm run unreliable-feed-test
           """
         }
       }
