@@ -1,4 +1,6 @@
 # UNRELEASED
+- [FIXED] Retry `/_db_updates` request using the last recorded sequence value as
+  the `since` query parameter.
 
 # 0.16.1 (2017-11-02)
 - [FIXED] Corrected `eslint` to be `devDependencies` instead of `dependencies`.
