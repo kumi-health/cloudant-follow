@@ -16,7 +16,7 @@
 def setupNodeAndTest(version) {
   node {
     // Install CouchDB 1.6.1
-    docker.image('couchdb:1.6.1').withRun('-p 5984:5984') {
+    docker.image('apache/couchdb:1.7.1').withRun('-p 5984:5984') {
       // Install NVM
       sh 'wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash'
       // Unstash the built content
