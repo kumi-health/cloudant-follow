@@ -1,4 +1,5 @@
 # UNRELEASED
+- [NEW] Allow a custom HTTP agent to be specified.
 - [FIXED] Retry `/_db_updates` request using the last recorded sequence value as
   the `since` query parameter.
 

@@ -213,6 +213,21 @@ test('Data due on a paused feed', function(t) {
   }
 })
 
+test('Specify a custom HTTP agent', function(t) {
+  var feed = follow({
+    db: couch.DB,
+    httpAgent: request.defaults({ headers: { 'foo': 'bar' } }) // set header
+  })
+    .on('confirm_request', function(req) {
+      t.ok(req.headers.foo, 'bar', 'Custom HTTP agent set header');
+    })
+    .on('change', function(change) {
+      t.ok(change.seq, 1, 'Got first change event');
+      feed.stop();
+      t.end();
+    });
+});
+
 test('Events for DB confirmation and hitting the original seq', function(t) {
   t.plan(7)
   var feed = follow(couch.DB, on_change)

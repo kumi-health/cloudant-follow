@@ -95,6 +95,7 @@ Besides the CouchDB options, more are available:
 * `max_retry_seconds` | Maximum time to wait between retries (default: 360 seconds)
 * `initial_retry_delay` | Time to wait before the first retry, in milliseconds (default 1000 milliseconds)
 * `response_grace_time` | Extra time to wait before timing out, in milliseconds (default 5000 milliseconds)
+* `httpAgent` | Specify a custom HTTP agent to use for all requests (default: `request`).
 
 ## Object API
 
