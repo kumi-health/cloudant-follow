@@ -47,6 +47,30 @@ test('Follow API', function(t) {
   })
 })
 
+test('Follow API when specifying endpoint', function(t) {
+  var i = 0
+    , saw = {}
+
+  var feed = follow(couch.DB + '/_changes', function(er, change) {
+    t.is(this, feed, 'Callback "this" value is the feed object')
+
+    i += 1
+    t.false(er, 'No error coming back from follow: ' + i)
+    t.equal(change.seq, i, 'Change #'+i+' should have seq_id='+i)
+    saw[change.id] = true
+
+    if(i == 3) {
+      t.ok(saw.doc_first, 'Got the first document')
+      t.ok(saw.doc_second, 'Got the second document')
+      t.ok(saw.doc_third , 'Got the third document')
+
+      t.doesNotThrow(function() { feed.stop() }, 'No problem calling stop()')
+
+      t.end()
+    }
+  })
+})
+
 test("Confirmation request behavior", function(t) {
   var feed = follow(couch.DB, function() {})
 
