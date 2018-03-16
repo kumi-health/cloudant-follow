@@ -21,36 +21,46 @@ var lib = require('../lib')
   , couch = require('./couch')
   , follow = require('../api')
 
+var getSeq = couch.get_update_seq; // alias
+
 couch.setup(test)
 
+// NOTE: This test requires CouchDB@1.X.
+//       Test uses negative 'since' parameters which are unsupported in CouchDB 2.X.
 test('Issue #5', function(t) {
-  var saw = { loops:0, seqs:{} }
+  couch.get_major_version(function(err, version) {
+    t.notOk(err)
+    if (version !== 1) {
+      return t.end();
+    }
 
-  var saw_change = false
-  // -2 means I want to see the last change.
-  var feed = follow({'db':couch.DB, since:-2}, function(er, change) {
-    t.equal(change.seq, 3, 'Got the latest change, 3')
-    t.false(saw_change, 'Only one callback run for since=-2 (assuming no subsequent change')
-    saw_change = true
+    var saw = { loops:0, seqs:{} }
+    var saw_change = false
+    // -2 means I want to see the last change.
+    var feed = follow({'db':couch.DB, since:-2}, function(er, change) {
+      t.equal(getSeq(change.seq), 3, 'Got the latest change, 3')
+      t.false(saw_change, 'Only one callback run for since=-2 (assuming no subsequent change')
+      saw_change = true
 
-    process.nextTick(function() { feed.stop() })
-    feed.on('stop', function() {
-      // Test using since=-1 (AKA since="now").
-      follow({'db':couch.DB, since:'now'}, function(er, change) {
-        t.equal(change.seq, 4, 'Only get changes made after starting the feed')
-        t.equal(change.id, "You're in now, now", 'Got the subsequent change')
+      process.nextTick(function() { feed.stop() })
+      feed.on('stop', function() {
+        // Test using since=-1 (AKA since="now").
+        follow({'db':couch.DB, since:'now'}, function(er, change) {
+          t.equal(getSeq(change.seq), 4, 'Only get changes made after starting the feed')
+          t.equal(change.id, "You're in now, now", 'Got the subsequent change')
 
-        this.stop()
-        t.end()
-      })
-
-      // Let that follower settle in, then send it something
-      setTimeout(function() {
-        var doc = { _id:"You're in now, now", movie:"Spaceballs" }
-        request.post({uri:couch.DB, json:doc}, function(er) {
-          if(er) throw er
+          this.stop()
+          t.end()
         })
-      }, couch.rtt())
+
+        // Let that follower settle in, then send it something
+        setTimeout(function() {
+          var doc = { _id:"You're in now, now", movie:"Spaceballs" }
+          request.post({uri:couch.DB, json:doc}, function(er) {
+            if(er) throw er
+          })
+        }, couch.rtt())
+      })
     })
   })
 })
@@ -63,9 +73,9 @@ test('Issue #6', function(t) {
 
   follow(couch.DB, function(er, change) {
     if(!er) {
-      saw.seqs[change.seq] = true
+      saw.seqs[getSeq(change.seq)] = true
       t.notOk(change.last_seq, 'Change '+change.seq+' ha no .last_seq')
-      if(change.seq == 1) {
+      if(getSeq(change.seq) == 1) {
         couch.delete_db(t, function(er) {
           saw.redid = true
           saw.redo_err = er
@@ -76,9 +86,9 @@ test('Issue #6', function(t) {
     else setTimeout(function() {
       // Give the redo time to finish, then confirm that everything happened as expected.
       // Hopefully this error indicates the database was deleted.
-      t.ok(er.message.match(/deleted .* 3$/), 'Got delete error after change 3')
+      t.ok(er.message.match(/Database deleted after change: 3.*$/), 'Got delete error after change 3')
       t.ok(er.deleted, 'Error object indicates database deletion')
-      t.equal(er.last_seq, 3, 'Error object indicates the last change number')
+      t.equal(getSeq(er.last_seq), 3, 'Error object indicates the last change number')
 
       t.ok(saw.seqs[1], 'Change 1 was processed')
       t.ok(saw.seqs[2], 'Change 2 was processed')

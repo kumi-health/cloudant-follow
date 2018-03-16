@@ -20,6 +20,7 @@ var tap = require('tap')
   , util = require('util')
   , assert = require('assert')
   , request = require('request')
+  , url = require('url')
 
 var follow = require('../api')
   , DB = process.env.db || 'http://localhost:5984/follow_test'
@@ -34,6 +35,8 @@ module.exports = { 'DB': DB
                  , 'setup': setup_test
                  , 'make_data': make_data
                  , 'delete_db': delete_db
+                 , 'get_major_version': get_major_version
+                 , 'get_update_seq': get_update_seq
                  }
 
 
@@ -169,6 +172,32 @@ function make_data(minimum_size, callback) {
   }
 }
 
+function get_update_seq(seq) {
+  switch (typeof seq) {
+    case 'number':
+      // CouchDB 1.X format, i.e. { "seq":1, ...
+      return seq;
+    case 'string':
+      // CouchDB 2.X format, i.e. { "seq":"1-xxxxxxxx", ...
+      return parseInt(seq.split('-')[0], 10);
+    default:
+      return seq;
+  }
+}
+
+function get_major_version(cb) {
+  var u = url.parse(DB);
+  var uri = `${u.protocol}//${u.host}`;
+  request.get({ uri: uri, json:true}, function(er, res, body) {
+    if (er) {
+      cb(er);
+    } else if (res.statusCode !== 200 || typeof body.version === 'undefined') {
+      cb(new Error('Unable to fetch CouchDB version.'));
+    } else {
+      cb(null, parseInt(body.version.split('.')[0], 10))
+    }
+  });
+}
 
 if(require.main === module)
   setup_test(tap.test)
