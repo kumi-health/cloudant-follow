@@ -3,6 +3,7 @@
 - [NEW] Trim the database URL if it includes the `/_changes` endpoint.
 - [FIXED] Retry `/_db_updates` request using the last recorded sequence value as
   the `since` query parameter.
+- [NOTE] Update engines in preparation for Node.js 4 “Argon” end-of-life.
 
 # 0.16.1 (2017-11-02)
 - [FIXED] Corrected `eslint` to be `devDependencies` instead of `dependencies`.

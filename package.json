@@ -52,6 +52,6 @@
     "follow": "./cli.js"
   },
   "engines": {
-    "node": ">=4.8.2"
+    "node": ">=6.13.0"
   }
 }
