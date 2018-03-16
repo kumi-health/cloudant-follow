@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-def setupNodeAndTest(version) {
+def setupNodeAndTest(version, couchDbVersion='latest') {
   node {
     // To get the docker sidecar run to default to docker-in-docker we must
     // unset the DOCKER_HOST variable.
     withEnv(["DOCKER_HOST="]){
-      // Install CouchDB 1.6.1
-      docker.image('apache/couchdb:1.7.1').withRun('-p 5984:5984') {
+      // Install CouchDB
+      docker.image("apache/couchdb:${couchDbVersion}").withRun('-p 5984:5984') {
         // Install NVM
         sh 'wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash'
         // Unstash the built content
@@ -65,9 +65,14 @@ stage('Build') {
 
 stage('QA') {
   def axes = [
-    Node4x: { setupNodeAndTest('lts/argon') }, // 4.x LTS
-    Node6x: { setupNodeAndTest('lts/boron') }, // 6.x LTS
-    Node:   { setupNodeAndTest('node') }       // Current
+    // Using CouchDB@1.7.1:
+    CouchDb1_7_1_Node6x: { setupNodeAndTest('lts/boron', '1.7.1') },  // Node.js 6.x LTS
+    CouchDb1_7_1_Node8x: { setupNodeAndTest('lts/carbon', '1.7.1') }, // Node.js 8.x LTS
+    CouchDb1_7_1_Node:   { setupNodeAndTest('node', '1.7.1') },       // Node.js Current
+    // Using latest CouchDB@2.X:
+    CouchDb2LatestNode6x: { setupNodeAndTest('lts/boron', '2') },  // Node.js 6.x LTS
+    CouchDb2LatestNode8x: { setupNodeAndTest('lts/carbon', '2') }, // Node.js 8.x LTS
+    CouchDb2LatestNode:   { setupNodeAndTest('node', '2') }        // Node.js Current
   ]
   parallel(axes) // Run the required axes in parallel
 }
