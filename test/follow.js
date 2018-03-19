@@ -1,4 +1,4 @@
-// Copyright © 2017 IBM Corp. All rights reserved.
+// Copyright © 2017, 2018 IBM Corp. All rights reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License. You may obtain a copy of
@@ -20,6 +20,7 @@ var tap = require('tap')
 var couch = require('./couch')
   , follow = require('../api')
 
+var getSeq = couch.get_update_seq; // alias
 
 couch.setup(test)
 
@@ -32,7 +33,7 @@ test('Follow API', function(t) {
 
     i += 1
     t.false(er, 'No error coming back from follow: ' + i)
-    t.equal(change.seq, i, 'Change #'+i+' should have seq_id='+i)
+    t.equal(getSeq(change.seq), i, 'Change #'+i+' should have seq_id='+i)
     saw[change.id] = true
 
     if(i == 3) {
@@ -56,7 +57,7 @@ test('Follow API when specifying endpoint', function(t) {
 
     i += 1
     t.false(er, 'No error coming back from follow: ' + i)
-    t.equal(change.seq, i, 'Change #'+i+' should have seq_id='+i)
+    t.equal(getSeq(change.seq), i, 'Change #'+i+' should have seq_id='+i)
     saw[change.id] = true
 
     if(i == 3) {
@@ -138,8 +139,8 @@ test('Catchup events', function(t) {
 
   feed.on('change', function(change) { last_seen = change.seq })
   feed.on('catchup', function(id) {
-    t.equal(last_seen, 3, 'The catchup event fires after the change event that triggered it')
-    t.equal(id       , 3, 'The catchup event fires on the seq_id of the latest change')
+    t.equal(getSeq(last_seen), 3, 'The catchup event fires after the change event that triggered it')
+    t.equal(getSeq(id)       , 3, 'The catchup event fires on the seq_id of the latest change')
     feed.stop()
     t.end()
   })
@@ -174,13 +175,13 @@ test('Data due on a paused feed', function(t) {
   feed.on('stop'     , function() { ev('stop')      })
 
   feed.on('change', function(change) {
-    if(change.seq == 1) {
+    if(getSeq(change.seq) == 1) {
       feed.pause()
       // Stay paused long enough for three heartbeats to be overdue.
       setTimeout(function() { feed.resume() }, HB_DUE * 3 * 1.1)
     }
 
-    if(change.seq == 3) {
+    if(getSeq(change.seq) == 3) {
       feed.stop()
       setTimeout(check_results, couch.rtt())
     }
@@ -249,7 +250,7 @@ test('Specify a custom HTTP agent', function(t) {
       t.ok(req.headers.foo, 'bar', 'Custom HTTP agent set header');
     })
     .on('change', function(change) {
-      t.ok(change.seq, 1, 'Got first change event');
+      t.ok(getSeq(change.seq), 1, 'Got first change event');
       feed.stop();
       t.end();
     });
@@ -266,15 +267,15 @@ test('Events for DB confirmation and hitting the original seq', function(t) {
   // This will run 3 times.
   function on_change(er, ch) {
     t.false(er, 'No problem with the feed')
-    if(ch.seq == 3) {
+    if(getSeq(ch.seq) == 3) {
       t.ok(events.confirm, 'Confirm event fired')
       t.equal(events.confirm && events.confirm.db_name, 'follow_test', 'Confirm event returned the Couch DB object')
-      t.equal(events.confirm && events.confirm.update_seq, 3, 'Confirm event got the update_seq right')
+      t.equal(events.confirm && getSeq(events.confirm.update_seq), 3, 'Confirm event got the update_seq right')
     }
   }
 
   function caught_up(seq) {
-    t.equal(seq, 3, 'Catchup event fired on update 3')
+    t.equal(getSeq(seq), 3, 'Catchup event fired on update 3')
 
     feed.stop()
     t.end()
@@ -284,14 +285,14 @@ test('Events for DB confirmation and hitting the original seq', function(t) {
 test('Handle a deleted database', function(t) {
   var feed = follow(couch.DB, function(er, change) {
     if(er){
-      t.equal(er.last_seq, 3, 'Got an error for the deletion event')
+      t.equal(getSeq(er.last_seq), 3, 'Got an error for the deletion event')
       return t.end()
     }
 
-    if(change.seq < 3)
+    if(getSeq(change.seq) < 3)
       return
 
-    t.equal(change.seq, 3, 'Got change number 3')
+    t.equal(getSeq(change.seq), 3, 'Got change number 3')
 
     couch.delete_db(t, function(er) {
       t.false(er, 'No problem deleting database')

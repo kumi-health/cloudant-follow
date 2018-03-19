@@ -1,3 +1,17 @@
+// Copyright © 2018 IBM Corp. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not
+// use this file except in compliance with the License. You may obtain a copy of
+// the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+// WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+// License for the specific language governing permissions and limitations under
+// the License.
+
 var tap = require('tap')
   , test = tap.test
   , util = require('util')
@@ -6,6 +20,7 @@ var tap = require('tap')
 var couch = require('./couch')
   , follow = require('../api')
 
+var getSeq = couch.get_update_seq; // alias
 
 couch.setup(test)
 
@@ -80,7 +95,7 @@ test('Error conditions', function(t) {
 
   feed = new follow.Changes({'feed':'continuous'})
   t.throws(write('{"seq":1,"id":"hi","changes":[{"rev":"1-869df2efe56ff5228e613ceb4d561b35"}]},\n'),
-           'Continuous stream does not want a comma')
+          'Continuous stream does not want a comma')
 
   var types = ['longpoll', 'continuous']
   types.forEach(function(type) {
@@ -424,9 +439,9 @@ test('Feeds from couch', function(t) {
 
       t.equal(events.length, expected_count, 'Change event count for ' + type)
 
-      t.equal(events[0].seq, 1, 'First '+type+' update sequence id')
-      t.equal(events[1].seq, 2, 'Second '+type+' update sequence id')
-      t.equal(events[2].seq, 3, 'Third '+type+' update sequence id')
+      t.equal(getSeq(events[0].seq), 1, 'First '+type+' update sequence id')
+      t.equal(getSeq(events[1].seq), 2, 'Second '+type+' update sequence id')
+      t.equal(getSeq(events[2].seq), 3, 'Third '+type+' update sequence id')
 
       t.equal(good_id(events[0]), true, 'First '+type+' update is a good doc id: ' + events[0].id)
       t.equal(good_id(events[1]), true, 'Second '+type+' update is a good doc id: ' + events[1].id)
@@ -552,7 +567,7 @@ test('Pausing and destroying a feed mid-stream', function(t) {
 
         var change = null
         t.doesNotThrow(function() { change = JSON.parse(event.val) }, label+' was JSON: ' + type)
-        t.ok(change && change.seq > 0 && change.id, label+' was change data: ' + type)
+        t.ok(change && getSeq(change.seq) > 0 && change.id, label+' was change data: ' + type)
 
         // The first batch of events should have fired quickly (IMMEDIATE), then silence. Then another batch
         // of events at the FIRST_PAUSE mark. Then more silence. Then a final batch at the SECOND_PAUSE mark.
