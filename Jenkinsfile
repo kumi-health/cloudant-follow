@@ -66,13 +66,9 @@ stage('Build') {
 stage('QA') {
   def axes = [
     // Using CouchDB@1.7.1:
-    CouchDb1_7_1_Node6x: { setupNodeAndTest('lts/boron', '1.7.1') },  // Node.js 6.x LTS
-    CouchDb1_7_1_Node8x: { setupNodeAndTest('lts/carbon', '1.7.1') }, // Node.js 8.x LTS
-    CouchDb1_7_1_Node:   { setupNodeAndTest('node', '1.7.1') },       // Node.js Current
+    CouchDb1_7_1_Node:   { setupNodeAndTest('node', '1.7.1') },
     // Using latest CouchDB@2.X:
-    CouchDb2LatestNode6x: { setupNodeAndTest('lts/boron', '2') },  // Node.js 6.x LTS
-    CouchDb2LatestNode8x: { setupNodeAndTest('lts/carbon', '2') }, // Node.js 8.x LTS
-    CouchDb2LatestNode:   { setupNodeAndTest('node', '2') }        // Node.js Current
+    CouchDb2LatestNode:   { setupNodeAndTest('node', '2') }
   ]
   parallel(axes) // Run the required axes in parallel
 }
