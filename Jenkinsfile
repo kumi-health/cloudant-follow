@@ -35,6 +35,7 @@ def setupNodeAndTest(version, couchDbVersion='latest') {
               [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
               nvm install ${version}
               nvm use ${version}
+              wget --retry-connrefused http://localhost:5984
               npm test && npm run unreliable-feed-test
             """
           }
