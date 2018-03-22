@@ -125,3 +125,69 @@ tap.test('Captures all changes in unreliable `/_db_updates` feed', { timeout: 30
 
   feed.follow();
 });
+
+tap.test('Pause and resume unreliable `/_changes` feed', { timeout: 300000 }, function(t) {
+  var actualChanges = [];
+  var expectedChanges = [];
+
+  var pauseCallCount = 0;
+  var resumeCallCount = 0;
+
+  const pauseEveryChanges = 50; // pause feed every 50 changes for 10secs
+
+  // build expected changes array
+  for (let i = 1; i <= totalUpdates; i++) {
+    expectedChanges.push(`doc${i}`);
+  }
+
+  var feed = new follow.Feed();
+  feed.db = `http://localhost:${port}/foo`;
+
+  var isPaused = false;
+
+  feed
+    .on('error', function(error) {
+      t.fail(`Unexpected error: ${error}`);
+    })
+    .on('pause', function() {
+      isPaused = true;
+      pauseCallCount++;
+    })
+    .on('resume', function() {
+      isPaused = false;
+      resumeCallCount++;
+    })
+    .on('change', function(change) {
+      if (isPaused) {
+        t.fail('Unexpected change received from paused feed');
+      }
+
+      let i = actualChanges.indexOf(change.id);
+      t.equal(i, -1, `Unseen change for doc '${change.id}'.`);
+      t.ok(change.seq, 'Valid seq for change.');
+
+      if (actualChanges.length >= totalUpdates) {
+        feed.stop();
+      } else {
+        actualChanges.push(change.id);
+
+        if (actualChanges.length % pauseEveryChanges == 0) {
+          debug('pausing feed for 10 seconds')
+          feed.pause();
+          setTimeout(function() {
+            debug('resuming feed...')
+            feed.resume();
+          }, 10000);
+        }
+      }
+    })
+    .on('stop', function() {
+      var expectedCallCount = parseInt(actualChanges.length / pauseEveryChanges);
+      t.equal(pauseCallCount, expectedCallCount);
+      t.equal(resumeCallCount, expectedCallCount);
+      t.deepEqual(actualChanges, expectedChanges);
+      t.end();
+    });
+
+  feed.follow();
+});
