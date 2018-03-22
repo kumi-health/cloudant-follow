@@ -37,7 +37,7 @@ tap.beforeEach(function(done) {
     '--min-delay', 100,
     '--max-delay', 5000,
     '--port', port,
-    '--total-updates', totalUpdates
+    '--total-updates', totalUpdates * 2
   ]);
   // capture stdout/stderr
   mockServer.stderr.on('data', (data) => {
@@ -77,9 +77,10 @@ tap.test('Captures all changes in unreliable `/_changes` feed', { timeout: 30000
       t.equal(i, -1, `Unseen change for doc '${change.id}'.`);
       t.ok(change.seq, 'Valid seq for change.');
 
-      actualChanges.push(change.id);
-      if (actualChanges.length === totalUpdates) {
+      if (actualChanges.length >= totalUpdates) {
         feed.stop();
+      } else {
+        actualChanges.push(change.id);
       }
     })
     .on('stop', function() {
@@ -111,9 +112,10 @@ tap.test('Captures all changes in unreliable `/_db_updates` feed', { timeout: 30
       t.equal(i, -1, `Unseen update for db '${change.db_name}'.`);
       t.equal(change.type, 'created', 'Found expected change type "created".');
 
-      actualUpdates.push(change.db_name);
-      if (actualUpdates.length === totalUpdates) {
+      if (actualUpdates.length >= totalUpdates) {
         feed.stop();
+      } else {
+        actualUpdates.push(change.db_name);
       }
     })
     .on('stop', function() {
