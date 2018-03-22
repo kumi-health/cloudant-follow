@@ -1,3 +1,5 @@
+# UNRELEASED
+
 # 0.17.0 (2018-03-22)
 - [NEW] Allow a custom HTTP agent to be specified.
 - [NEW] Trim the database URL if it includes the `/_changes` endpoint.
