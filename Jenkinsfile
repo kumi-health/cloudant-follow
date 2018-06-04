@@ -19,7 +19,7 @@ def setupNodeAndTest(version, couchDbVersion='latest') {
     // unset the DOCKER_HOST variable.
     withEnv(["DOCKER_HOST="]){
       // Install CouchDB
-      docker.image("apache/couchdb:${couchDbVersion}").withRun('-p 5984:5984') {
+      docker.image("couchdb:${couchDbVersion}").withRun('-p 5984:5984') {
         // Install NVM
         sh 'wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash'
         // Unstash the built content
