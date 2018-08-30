@@ -66,6 +66,7 @@ stage('QA') {
 
 // Publish the master branch
 stage('Publish') {
+  gkLockfile {}
   if (env.BRANCH_NAME == "master") {
     node {
       unstash 'built'
