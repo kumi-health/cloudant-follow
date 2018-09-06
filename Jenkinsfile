@@ -56,9 +56,9 @@ stage('Build') {
 
 stage('QA') {
   def axes = [
-    // Using CouchDB@1.7.1:
-    CouchDb1_7_1_Node:   { setupNodeAndTest('node', '1.7.1') },
-    // Using latest CouchDB@2.X:
+    // Using latest CouchDB @1.x:
+    CouchDb1LatestNode:   { setupNodeAndTest('node', '1') },
+    // Using latest CouchDB @2.X:
     CouchDb2LatestNode:   { setupNodeAndTest('node', '2') }
   ]
   parallel(axes) // Run the required axes in parallel
@@ -66,6 +66,7 @@ stage('QA') {
 
 // Publish the master branch
 stage('Publish') {
+  gkLockfile {}
   if (env.BRANCH_NAME == "master") {
     node {
       unstash 'built'
