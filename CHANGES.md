@@ -1,4 +1,5 @@
 # UNRELEASED
+- [NEW] Support use of changes selector filter.
 - [FIXED] Abort request retry for dead feed.
 
 # 0.17.0 (2018-03-22)
