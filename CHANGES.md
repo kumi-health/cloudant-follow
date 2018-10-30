@@ -1,6 +1,7 @@
 # UNRELEASED
 - [NEW] Support use of changes selector filter.
 - [FIXED] Abort request retry for dead feed.
+- [FIXED] Pipe using decoded request.
 - [FIXED] Support using `since="now"` parameter in a `/_db_updates` feed.
 
 # 0.17.0 (2018-03-22)
