@@ -1,6 +1,6 @@
 require 'json'
 
-LIBRARY = [ "api.js", "feed.js", "lib.js", "cli.js" ]
+LIBRARY = [ "api.js", "cli.js" ]
 BROWSER_TOOLS = Dir.glob("browser/*").select{|x| x != "browser/export.js" }
 
 task :default => :export
